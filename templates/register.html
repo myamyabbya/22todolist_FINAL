@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>DOMADO - 회원가입</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #7f8762;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .join-wrap {
+      width: 800px;
+      height: 500px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .welcome-text {
+      margin-top: 40px;
+      font-size: 40px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 3px 4px rgba(0,0,0,0.3);
+    }
+
+    .logo-img {
+      margin-top: 10px;
+      height: 150px;
+      object-fit: contain;
+    }
+
+    .join-card {
+      position: absolute;
+      bottom: 20px;
+      width: 90%;
+      background: #ffffff;
+      border-radius: 60px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+      padding: 30px 60px;
+      box-sizing: border-box;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .field-label {
+      width: 70px;
+      font-size: 26px;
+      font-weight: 900;
+    }
+
+    .field-input-wrap {
+      flex: 1;
+      background: #f3f3f3;
+      border-radius: 30px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .field-input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .eye-btn {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 18px;
+      margin-left: 6px;
+    }
+
+    .error-text {
+      text-align: center;
+      color: #c43131;
+      font-weight: 700;
+      margin-top: -6px;
+      margin-bottom: 10px;
+    }
+
+    .join-btn {
+      display: block;
+      margin: 10px auto 0;
+      padding: 10px 40px;
+      font-size: 24px;
+      font-weight: 900;
+      border-radius: 24px;
+      border: none;
+      cursor: pointer;
+      background: #f4f4f4;
+      box-shadow: 0 4px 4px rgba(0,0,0,0.4);
+    }
+
+    .join-btn:hover {
+      transform: translateY(1px);
+    }
+
+    .sub-link {
+      margin-top: 6px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: #777;
+    }
+
+    .sub-link a {
+      color: #777;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="join-wrap">
+    <div class="welcome-text">환영해요!</div>
+
+    <img src="{{ url_for('static', filename='img/title.png') }}" class="logo-img" alt="DOMADO">
+
+    <div class="join-card">
+      <form method="post" action="{{ url_for('register') }}">
+        <div class="field-row">
+          <div class="field-label">ID</div>
+          <div class="field-input-wrap">
+            <input class="field-input" type="text" name="username" placeholder="아이디" required>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-label">PW</div>
+          <div class="field-input-wrap">
+            <input class="field-input" type="password" id="pw1" name="password" placeholder="비밀번호" required>
+            <button type="button" class="eye-btn" data-target="pw1">👁</button>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-label"></div>
+          <div class="field-input-wrap">
+            <input class="field-input" type="password" id="pw2" name="password_confirm" placeholder="비밀번호 확인">
+            <button type="button" class="eye-btn" data-target="pw2">👁</button>
+          </div>
+        </div>
+
+        {% if error %}
+          <p class="error-text">{{ error }}</p>
+        {% endif %}
+
+        <button type="submit" class="join-btn">JOIN</button>
+      </form>
+
+      <div class="sub-link">
+        이미 계정이 있으신가요? <a href="{{ url_for('login') }}">로그인</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 비밀번호 눈 버튼 토글 (두 개)
+    document.querySelectorAll('.eye-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.target;
+        const input = document.getElementById(id);
+        if (input) {
+          input.type = (input.type === 'password') ? 'text' : 'password';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

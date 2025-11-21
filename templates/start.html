@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>DOMADO - 시작</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 메인 스타일 -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <!-- ✅ 시작 화면 전용 폰트 (START 버튼용) -->
+  <style>
+    @font-face {
+      font-family: "DomadoTitle";
+      src: url("{{ url_for('static', filename='fonts/ChangwonDangamAsac-Bold.ttf') }}")
+           format("truetype");
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* 전체 배경 */
+    body.intro-body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      min-height: 100vh;           /* 화면 높이 이상은 나와도 보이게 */
+      width: 100vw;
+      background-color: #7f8762;   /* 올리브 배경 */
+      display: flex;
+      justify-content: center;     /* 가로 가운데 정렬 */
+      /* align-items: center;      ← 이거랑 overflow 때문에 아래가 잘렸었음 */
+      /* overflow: hidden;         ← 제거! */
+    }
+
+    .intro-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      /* height: 100%;  굳이 필요 없음 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 20px;           /* 위에서 조금 내려오게 */
+      padding-bottom: 20px;        /* 버튼 아래 여유 */
+    }
+
+    /* 상단 도마도 로고 */
+    .intro-logo {
+      width: 50%;
+      max-width: 450px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      /* 텍스트랑 토마토가 서로 가까워 보이도록 간격 줄이기 */
+      margin-bottom: -190px;
+    }
+
+    /* 가운데 커다란 토마토 */
+    .intro-tomato {
+      width: 30%;
+      max-width: 350px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      margin-top: 0;
+      margin-bottom: 10px;   /* 토마토와 START 버튼 사이 간격 */
+    }
+
+    /* START 버튼 */
+    .intro-start-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 60px;
+      border-radius: 40px;
+      border: none;
+      cursor: pointer;
+      background-color: #ffffff;
+      box-shadow: 0 12px 0 rgba(0, 0, 0, 0.35);
+      font-family: "DomadoTitle", "ChangwonDanggamAsac", Arial, sans-serif;
+      font-size: 42px;
+      letter-spacing: 0.18em;
+      color: #000000;
+    }
+
+    .intro-start-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 8px 0 rgba(0, 0, 0, 0.35);
+    }
+
+    @media (max-width: 900px) {
+      .intro-logo {
+        width: 80%;
+        margin-bottom: -20px;
+      }
+      .intro-tomato {
+        width: 45%;
+        margin-bottom: 24px;
+      }
+      .intro-start-btn {
+        padding: 14px 70px;
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+
+<body class="intro-body">
+  <div class="intro-wrapper">
+    <!-- 상단 로고 (도마도 이미지) -->
+    <img
+      src="{{ url_for('static', filename='img/title.png') }}"
+      alt="DOMADO"
+      class="intro-logo"
+    />
+
+    <!-- 가운데 토마토 아이콘 -->
+    <img
+      src="{{ url_for('static', filename='img/giant_tomato.png') }}"
+      alt="Tomato"
+      class="intro-tomato"
+    />
+
+    <!-- START 버튼 -->
+    <button class="intro-start-btn" id="startBtn">START</button>
+  </div>
+
+  <!-- 클릭 시 로그인 페이지로 이동 -->
+  <script>
+    const loginUrl = "{{ url_for('login') }}";
+    document.getElementById("startBtn").onclick = () => {
+      window.location.href = loginUrl;
+    };
+  </script>
+</body>
+</html>

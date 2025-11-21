@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>DOMADO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-logo-container">
+                <button id="sidebarLogo" class="menu-btn">
+                    <img src="{{ url_for('static', filename='img/title.png') }}" alt="도마도" class="sidebar-logo">
+                </button>
+            </div>
+
+            <div class="menu-top">
+                <button class="menu-btn active" id="scheduleBtn">일정</button>
+                <button class="menu-btn" id="memoBtn">메모</button>
+            </div> 
+
+            <div class="menu-bottom">
+                <button id="globalAddBtn" class="menu-btn add-btn">
+                    <img src="{{ url_for('static', filename='img/add_button.png') }}" alt="추가" class="add-img">
+                </button>
+            </div>
+
+            <div class="settings-wrap">
+                <button class="settings-btn">
+                    <img src="{{ url_for('static', filename='img/setting.png') }}" alt="설정" class="settings-img">
+                    설정
+                </button>
+            </div>
+        </nav>
+
+        <main class="main">
+            
+            <section id="scheduleView" class="view active">
+                <div class="schedule-header">
+                    <div id="scheduleDateBar" class="date-bar"></div>
+                </div>
+                
+                <div class="schedule-board">
+                    <div class="schedule-title-row">
+                        <h2 id="scheduleCurrentDate" class="schedule-date-label"></h2>
+                        <p class="schedule-sub-label">일정을 추가해 보세요.</p>
+                    </div>
+                
+                    <ul id="scheduleList" class="schedule-list"></ul>
+                
+                    <p class="schedule-hint">
+                        ✔ 클릭 시 일정 완료 처리 / 🗑 클릭 시 삭제<br>
+                    </p>
+                </div>
+            </section>
+
+            <section id="memoView" class="view">
+                <div id="dateBar" class="date-bar"></div>
+
+                <div class="calendar-container">
+                    <button id="toggleMonth" class="month-toggle-btn">
+                        <span>달력 보기 <span class="arrow">v</span>
+                    </button>
+                    
+                    <div id="monthCalendar" class="month-calendar hidden">
+                        <div class="month-header">
+                            <button id="prevMonth" class="month-nav-btn">&lt;</button>
+                            <span id="monthLabel"></span>
+                            <button id="nextMonth" class="month-nav-btn">&gt;</button>
+                        </div>
+                        <div class="calendar-days-label">
+                            <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+                        </div>
+                        <div id="calendarGrid" class="calendar-grid"></div>
+                    </div>
+                </div>
+
+                <!-- 노란색 보드 -->
+                <div class="schedule-board memo-board">
+                    <div id="memoList" class="memo-list"></div>
+                </div>
+            
+                <div id="memoInputBox" class="memo-input hidden">
+                    <input id="title" class="title-input" placeholder="제목을 입력하세요" />
+                    <textarea id="content" class="content-input" placeholder="본문을 입력하세요"></textarea>
+                    <div class="input-actions">
+                        <button id="saveMemo" class="check-btn">✔</button>
+                        <button id="cancelMemo" class="cancel-btn">✖</button>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <div id="scheduleModal" class="schedule-modal hidden">
+        <div class="schedule-modal-content">
+            <h3>일정 추가</h3>
+
+            <label for="scheduleTime">시간</label>
+            <input type="time" id="scheduleTime" class="schedule-input" />
+
+            <label for="scheduleText">내용</label>
+            <input type="text" id="scheduleText" class="schedule-input" placeholder="일정을 입력하세요" />
+
+            <div class="modal-actions">
+                <button id="scheduleSaveBtn" class="check-btn">✔</button>
+                <button id="scheduleCancelBtn" class="cancel-btn">✖</button>
+            </div>
+        </div>
+    </div>
+
+  <!-- 🔐 서버 세션 → LocalStorage 저장 -->
+  <script>
+    const userIdFromServer = "{{ user_id if user_id is not none else '' }}";
+    const usernameFromServer = "{{ username if username is not none else '' }}";
+
+    if (userIdFromServer) {
+      // 로그인 되어 있음 → localStorage에 저장
+      localStorage.setItem('loggedInUser', userIdFromServer);
+      localStorage.setItem('loggedInUsername', usernameFromServer);
+    } else {
+      // 로그인 안 되어 있음 → localStorage 비우기
+      localStorage.removeItem('loggedInUser');
+      localStorage.removeItem('loggedInUsername');
+    }
+  </script>
+
+  <!-- JS 로드 순서 (절대 변경 X) -->
+  <script src="{{ url_for('static', filename='main.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='memo.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='schedule.js') }}" defer></script>
+</body>
+</html>
+
+
