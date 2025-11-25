@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
   <meta charset="UTF-8">
   <title>DOMADO - 로그인</title>
   <style>
+    @font-face {
+    font-family: 'ChangwonDanggamAsak';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/CWDangamAsac-Bold.woff') format('woff');
+    font-weight: normal;
+    font-display: swap;
+    }
+
     body {
       margin: 0;
       padding: 0;
       background-color: #7f8762; /* 올리브색 배경 */
-      font-family: Arial, sans-serif;
+      font-family: 'ChangwonDanggamAsak', 'Arial Rounded MT Bold', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -26,16 +34,16 @@
     }
 
     .welcome-text {
-      margin-top: 40px;
-      font-size: 40px;
+      margin-top: -30px;
+      font-size: 100px;
       font-weight: 900;
       color: #ffffff;
-      text-shadow: 0 3px 4px rgba(0,0,0,0.3);
+      text-shadow: 0 9px rgb(64, 141, 58);
     }
 
     .logo-img {
-      margin-top: 10px;
-      height: 150px;
+      margin-top: 0px;
+      height: 300px;
       object-fit: contain;
     }
 
@@ -123,9 +131,11 @@
     }
 
     .sub-link a {
-      color: #777;
-      text-decoration: none;
+      font-family: 'Arial', sans-serif !important;
+      letter-spacing: 1px;
+      color: #494747;
     }
+
   </style>
 </head>
 <body>
@@ -135,7 +145,7 @@
 
     <!-- 토마토/DOMADO 로고 이미지 -->
     <!-- 없으면 index.html에서 쓰는 title.png 재사용해도 됨 -->
-    <img src="{{ url_for('static', filename='img/title.png') }}" class="logo-img" alt="DOMADO">
+    <img src="{{ url_for('static', filename='img/giant_tomato.png') }}" class="logo-img" alt="DOMADO">
 
     <div class="login-card">
 
@@ -183,3 +193,5 @@
 
 </body>
 </html>
+
+<!-- TEST 999 -->

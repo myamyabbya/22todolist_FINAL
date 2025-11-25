@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
     <title>DOMADO</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -37,33 +38,15 @@
 
         <main class="main">
             
-            <section id="scheduleView" class="view active">
-                <div class="schedule-header">
-                    <div id="scheduleDateBar" class="date-bar"></div>
-                </div>
-                
-                <div class="schedule-board">
-                    <div class="schedule-title-row">
-                        <h2 id="scheduleCurrentDate" class="schedule-date-label"></h2>
-                        <p class="schedule-sub-label">일정을 추가해 보세요.</p>
-                    </div>
-                
-                    <ul id="scheduleList" class="schedule-list"></ul>
-                
-                    <p class="schedule-hint">
-                        ✔ 클릭 시 일정 완료 처리 / 🗑 클릭 시 삭제<br>
-                    </p>
-                </div>
-            </section>
-
-            <section id="memoView" class="view">
+            <div class="date-calendar-wrapper">
                 <div id="dateBar" class="date-bar"></div>
-
+            
                 <div class="calendar-container">
+                    <!-- 메모에서 쓰던 id 이름 그대로로 돌려놓는 게 포인트 -->
                     <button id="toggleMonth" class="month-toggle-btn">
-                        <span>달력 보기 <span class="arrow">v</span>
+                        <span class="arrow">⌵</span>
                     </button>
-                    
+            
                     <div id="monthCalendar" class="month-calendar hidden">
                         <div class="month-header">
                             <button id="prevMonth" class="month-nav-btn">&lt;</button>
@@ -71,13 +54,26 @@
                             <button id="nextMonth" class="month-nav-btn">&gt;</button>
                         </div>
                         <div class="calendar-days-label">
-                            <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+                            <span>일</span><span>월</span><span>화</span><span>수</span>
+                            <span>목</span><span>금</span><span>토</span>
                         </div>
                         <div id="calendarGrid" class="calendar-grid"></div>
                     </div>
                 </div>
-
-                <!-- 노란색 보드 -->
+            </div>
+            <!-- ✅ 공용 영역 끝 -->
+            
+            <section id="scheduleView" class="view active">
+                <div class="schedule-board">
+                    <div class="schedule-title-row">
+                        <h2 id="scheduleCurrentDate" class="schedule-date-label"></h2>
+                    </div>
+                    <ul id="scheduleList" class="schedule-list"></ul>
+                </div>
+            </section>
+            
+            <section id="memoView" class="view">
+                <!-- dateBar / 달력은 이제 여기서 제거 -->
                 <div class="schedule-board memo-board">
                     <div id="memoList" class="memo-list"></div>
                 </div>
@@ -90,7 +86,6 @@
                         <button id="cancelMemo" class="cancel-btn">✖</button>
                     </div>
                 </div>
-
             </section>
         </main>
     </div>
@@ -112,26 +107,26 @@
         </div>
     </div>
 
-  <!-- 🔐 서버 세션 → LocalStorage 저장 -->
-  <script>
+    <!-- 🔐 서버 세션 → LocalStorage 저장 -->
+<script>
     const userIdFromServer = "{{ user_id if user_id is not none else '' }}";
     const usernameFromServer = "{{ username if username is not none else '' }}";
 
     if (userIdFromServer) {
       // 로그인 되어 있음 → localStorage에 저장
-      localStorage.setItem('loggedInUser', userIdFromServer);
-      localStorage.setItem('loggedInUsername', usernameFromServer);
+    localStorage.setItem('loggedInUser', userIdFromServer);
+    localStorage.setItem('loggedInUsername', usernameFromServer);
     } else {
       // 로그인 안 되어 있음 → localStorage 비우기
-      localStorage.removeItem('loggedInUser');
-      localStorage.removeItem('loggedInUsername');
+    localStorage.removeItem('loggedInUser');
+    localStorage.removeItem('loggedInUsername');
     }
-  </script>
+</script>
 
-  <!-- JS 로드 순서 (절대 변경 X) -->
-  <script src="{{ url_for('static', filename='main.js') }}" defer></script>
-  <script src="{{ url_for('static', filename='memo.js') }}" defer></script>
-  <script src="{{ url_for('static', filename='schedule.js') }}" defer></script>
+    <!-- JS 로드 순서 (절대 변경 X) -->
+    <script src="{{ url_for('static', filename='main.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='memo.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='schedule.js') }}" defer></script>
 </body>
 </html>
 

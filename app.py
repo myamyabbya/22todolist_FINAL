@@ -34,9 +34,22 @@ def init_db():
         )
         """
     )
+
+def init_memo_db():
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS memos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            content TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    """)
     conn.commit()
     conn.close()
-
 # ========================== 페이지 라우트 ==========================
 
 # START 화면
@@ -122,33 +135,72 @@ memos = []
 
 @app.route('/memos', methods=['GET'])
 def get_memos():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"message": "로그인이 필요합니다."}), 401
+
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT id, title, content, created_at FROM memos WHERE user_id = ?", (user_id,))
+    rows = cur.fetchall()
+    conn.close()
+
+    memos = [dict(row) for row in rows]
     return jsonify(memos)
+
 
 @app.route('/memos', methods=['POST'])
 def add_memo():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"message": "로그인이 필요합니다."}), 401
+
     data = request.get_json()
     title = data.get('title')
     content = data.get('content')
+
     if not title:
         return jsonify({'message': 'title이 필요합니다.'}), 400
-    memo = {
-        'id': len(memos) + 1,
-        'title': title,
-        'content': content
-    }
-    memos.append(memo)
-    return jsonify(memo), 201
+
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO memos (user_id, title, content) VALUES (?, ?, ?)",
+        (user_id, title, content)
+    )
+    conn.commit()
+
+    memo_id = cur.lastrowid
+    conn.close()
+
+    return jsonify({'id': memo_id, 'title': title, 'content': content}), 201
+
 
 @app.route('/memos/<int:memo_id>', methods=['DELETE'])
 def delete_memo(memo_id):
-    global memos
-    new = [m for m in memos if m['id'] != memo_id]
-    if len(new) == len(memos):
-        return jsonify({'message': '해당 id 없음'}), 404
-    memos = new
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"message": "로그인이 필요합니다."}), 401
+
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(
+        "DELETE FROM memos WHERE id = ? AND user_id = ?",
+        (memo_id, user_id)
+    )
+    deleted = cur.rowcount
+    conn.commit()
+    conn.close()
+
+    if deleted == 0:
+        return jsonify({"message": "해당 메모가 없거나 권한이 없습니다."}), 404
+
     return jsonify({'message': '삭제 완료'}), 200
 
 # ========================== 서버 실행 ==========================
 if __name__ == "__main__":
     init_db()  # DB 테이블 자동 생성
     app.run(host='0.0.0.0', port=5000, debug=True)
+    init_memo_db()   # ← 메모 테이블 생성
+    app.run(host="0.0.0.0", port=5000, debug=True)
+    
