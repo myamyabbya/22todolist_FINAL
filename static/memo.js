@@ -2,6 +2,7 @@ let selectedDate = new Date().toISOString().split('T')[0];
 const userId = localStorage.getItem("loggedInUser") || "guest";
 const STORAGE_KEY = `domado-memo-${userId}`;
 let memosByDate = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+const todayStr = new Date().toISOString().split('T')[0];
 
 document.addEventListener('DOMContentLoaded', () => {
     const memoView = document.getElementById('memoView');
@@ -47,15 +48,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const date = String(d.getDate()).padStart(2, '0');
-            btn.textContent = `${month}-${date}`;
-
             const dateStr = `${d.getFullYear()}-${month}-${date}`;
-            if (dateStr === selectedDate) btn.classList.add('selected');
 
+            // 숫자 부분
+            const labelSpan = document.createElement('span');
+            labelSpan.textContent = `${month}-${date}`;
+            btn.appendChild(labelSpan);
+            
+            // 오늘이면 아래에 "오늘" 라벨 추가
+            if (dateStr === todayStr) {
+            const todaySpan = document.createElement('span');
+            todaySpan.className = 'today-label';
+            todaySpan.textContent = '오늘';
+            btn.appendChild(todaySpan);
+            }
+            
+
+            if (dateStr === selectedDate) btn.classList.add('selected');
+            
             btn.addEventListener('click', () => {
                 selectedDate = dateStr;
                 renderWeekDates();
                 renderMemos();
+
+                if (window.renderScheduleForCurrentDate) {
+                window.renderScheduleForCurrentDate();
+                }
             });
 
             dateBar.appendChild(btn);
@@ -155,6 +173,10 @@ function renderMemos() {
                 renderMemos();
                 monthCalendar.classList.add('hidden');
                 toggleMonthBtn.classList.remove('active');
+
+                if (window.renderScheduleForCurrentDate) {
+                    window.renderScheduleForCurrentDate();
+                }
             });
 
             calendarGrid.appendChild(dayDiv);

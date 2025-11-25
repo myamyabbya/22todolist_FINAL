@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+<meta name="msapplication-TileColor" content="#ffffff">
   <title>DOMADO - 시작</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -13,7 +14,7 @@
     @font-face {
       font-family: "DomadoTitle";
       src: url("{{ url_for('static', filename='fonts/ChangwonDangamAsac-Bold.ttf') }}")
-           format("truetype");
+      format("truetype");
       font-weight: normal;
       font-style: normal;
       font-display: swap;
@@ -34,16 +35,13 @@
     }
 
     .intro-wrapper {
+      width: 900px;
       position: relative;
-      width: 100%;
-      max-width: 800px;
-      /* height: 100%;  굳이 필요 없음 */
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding-top: 20px;           /* 위에서 조금 내려오게 */
-      padding-bottom: 20px;        /* 버튼 아래 여유 */
+      justify-content: center; 
+      gap: 20px;/* 버튼 아래 여유 */
     }
 
     /* 상단 도마도 로고 */
